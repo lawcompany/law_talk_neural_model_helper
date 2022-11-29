@@ -1,7 +1,7 @@
-class HuggingFaceBaseClass:
+class HuggingFaceBaseHandler:
     def __init__(self, gpu_id=0):
-        from backend.src.basic_tools.data_structure.constant import Directories
         from os import environ
+        from utils.constant import Directories
         environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
         environ["CUDA_VISIBLE_DEVICES"] = str(gpu_id)
         self.hf_path = Directories.HuggingFacePath()

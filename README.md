@@ -25,11 +25,11 @@ please do not hesitate to contact.
 ```bash
 $ cd ~/Downloads
 $ git clone https://github.com/lawcompany/lawtalk_neural_model_helper.git
-$ cd lawtalk_neural_model_helper
+$ cd law_talk_neural_model_helper
 $ pip install -r requirements.txt
-$ python train_models.py 
+$ python eval_models.py 
 ```
-The command above should train the models according to the `hugging_face_train_params.json`, then save models at `results` dir.
+The command above should train the models according to the `parameters/model_parameters.json`, then save models at `results` dir.
 
 If any error bothers you, please contact me (please refer to the email addresses above). I tried to cover all possible exceptions, but if it bothered you, my bad ;) sorry about that.
 

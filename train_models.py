@@ -1,31 +1,27 @@
 from torch.utils.data import Dataset
 from torch import tensor
-from backend.src.hugging_face_base_scheduler import HuggingFaceBaseClass
+from utils.hugging_face_base_handler import HuggingFaceBaseHandler
 
 
-class HuggingFaceModelTrainingScheduler(HuggingFaceBaseClass):
+class HuggingFaceModelTrainingScheduler(HuggingFaceBaseHandler):
     def __init__(self, gpu_id=0):
         """
         Args:
             gpu_id: an int
         """
         super().__init__(gpu_id=gpu_id)
-        from backend.src.basic_tools.data_structure.constant import Directories
+        from utils.misc import CudaOperators
+        env_params = CudaOperators.load_env_params()
+        self.dataset_name = env_params['dataset_name']
+        self.task_name = env_params['task_name']
         self.early_stop_patience = 2
         self.id2label = self.get_mapping_from_label_id_to_label_str()
-        self.dataset_name = "lawcompany/KLAID"
-        self.task_name = "ljp"
         self.param_sample = {
-            "hugging_face_model_name": ["klue/roberta-large", "klue/roberta-small", "klue/roberta-base", "klue/bert-base"],
-            "num_train_epochs": 20,
-            "per_device_train_batch_size": 32,
-            "per_device_eval_batch_size": 32,
-            "save_steps": 50, "seed": 42, "evaluation_strategy": 'steps',
+            "hugging_face_model_name": "klue/roberta-small", "num_train_epochs": 20, "per_device_train_batch_size": 32,
+            "per_device_eval_batch_size": 32, "save_steps": 50, "seed": 42, "evaluation_strategy": 'steps',
             "gradient_accumulation_steps": 16, "eval_accumulation_steps": 32,
-            "eval_steps": 50, "logging_steps": 25,
-            "learning_rate": 1e-4, "weight_decay": 5e-2, "save_total_limit": 3,
-            "load_best_model_at_end": "True", "metric_for_best_model": 'f1',
-            "label_names": ['labels']
+            "eval_steps": 50, "logging_steps": 25, "learning_rate": 1e-4, "weight_decay": 5e-2, "save_total_limit": 3,
+            "load_best_model_at_end": "True", "metric_for_best_model": 'f1', "label_names": ['labels']
         }
 
     def __call__(self, param):
@@ -61,8 +57,8 @@ class HuggingFaceModelTrainingScheduler(HuggingFaceBaseClass):
 
     @staticmethod
     def get_mapping_from_label_id_to_label_str():
-        from backend.src.basic_tools.data_loader import JSONLoader
-        from backend.src.basic_tools.data_structure.constant import Directories
+        from utils.data_loader import JSONLoader
+        from utils.constant import Directories
         id2label = JSONLoader(dir_=Directories.LAW_SERVICE_MAPPING_DIR)()
         id2label = id2label['id2label']
         return id2label
@@ -122,7 +118,7 @@ class HuggingFaceModelTrainingScheduler(HuggingFaceBaseClass):
         """
         import os
         from copy import deepcopy
-        from backend.src.basic_tools.data_loader import JSONSaver
+        from utils.data_loader import JSONSaver
         if os.path.isdir(self.log_dir_root):
             pass
         else:
@@ -179,7 +175,6 @@ class HuggingFaceModelTrainingScheduler(HuggingFaceBaseClass):
         Returns:
             a Dataset
         """
-
         labels = [x['laws_service_id'] for x in dataset]
         dataset = TensorDimensionHelperAddedDataset(
             data=dataset, labels=labels, tokenizer=tokenizer
@@ -215,6 +210,66 @@ class HuggingFaceModelTrainingScheduler(HuggingFaceBaseClass):
         Returns:
             None
         """
+        train_data, test_data, model, model_file_dir, training_parameters, hugging_face_model_name =\
+            self.get_data_along_with_the_model_info_and_training_parameters(param=param)
+        self.train_model_and_save_checkpoints_if_oom_does_not_happen(
+            train_data=train_data, test_data=test_data, model=model, model_file_dir=model_file_dir,
+            training_parameters=training_parameters, hugging_face_model_name=hugging_face_model_name
+        )
+
+    def train_model_and_save_checkpoints_if_oom_does_not_happen(self, train_data, test_data, model, model_file_dir,
+                                                                training_parameters, hugging_face_model_name):
+        """
+        Args:
+            train_data: a HF Dataset
+            test_data: a HF Dataset
+            model: a HF Model
+            model_file_dir: a str
+            training_parameters: a dict
+            hugging_face_model_name: a str
+
+        Returns:
+            None
+        """
+        def update_oom_info(dict_to_update, hf_model_name, oom_happened, oom_message):
+            """
+            Args:
+                dict_to_update: a dict
+                hf_model_name: a str
+                oom_happened: a bool
+                oom_message: a str
+
+            Returns:
+                a dict
+            """
+            dict_to_update['hugging_face_model_name'] = hf_model_name
+            dict_to_update['whether_OOM_happened'] = oom_happened
+            dict_to_update['OOM_message'] = oom_message
+            return dict_to_update
+
+        try:
+            self.train_model(
+                param=training_parameters, train_data=train_data, test_data=test_data, model=model
+            )
+            training_parameters = update_oom_info(training_parameters, hugging_face_model_name, False, "")
+            self.log_training_info(model_dir=model_file_dir, param=training_parameters)
+        except RuntimeError as e:
+            if "CUDA out of memory. " in str(e):
+                print(f"[WARNING] OOM happened, saving the OOM error message at the training log (.opt) file")
+                training_parameters = update_oom_info(training_parameters, hugging_face_model_name, True, str(e))
+                self.log_training_info(model_dir=model_file_dir, param=training_parameters)
+            else:
+                raise RuntimeError
+
+    def get_data_along_with_the_model_info_and_training_parameters(self, param):
+        """
+        Args:
+            param: a dict
+
+        Returns:
+            a tuple of (train_data, test_data, model, model_file_dir, training_parameters, hugging_face_model_name)
+            which is (a Dataset, a Dataset, a Model, a str, a dict, a str)
+        """
         from copy import deepcopy
         from torch import tensor, long
         from transformers import AutoTokenizer
@@ -229,26 +284,11 @@ class HuggingFaceModelTrainingScheduler(HuggingFaceBaseClass):
             hugging_face_model_name, num_labels=len(possible_labels)
         )
         training_parameters['output_dir'] = model_file_dir
-        try:
-            self.train_model(
-                param=training_parameters, train_data=train_data, test_data=test_data, model=model
-            )
-            training_parameters['hugging_face_model_name'] = hugging_face_model_name
-            training_parameters['whether_OOM_happened'] = False
-            self.log_training_info(model_dir=model_file_dir, param=training_parameters)
-        except RuntimeError as e:
-            if "CUDA out of memory. " in str(e):
-                print(f"[WARNING] OOM happened, saving the OOM error message at the training log (.opt) file")
-                training_parameters['hugging_face_model_name'] = hugging_face_model_name
-                training_parameters['whether_OOM_happened'] = True
-                training_parameters['OOM_message'] = str(e)
-                self.log_training_info(model_dir=model_file_dir, param=training_parameters)
-            else:
-                raise RuntimeError
+        return train_data, test_data, model, model_file_dir, training_parameters, hugging_face_model_name
 
 
 class TensorDimensionHelperAddedDataset(Dataset):
-    def __init__(self, data, labels, tokenizer, n_jobs=8):
+    def __init__(self, data, labels, tokenizer):
         self.data = data
         self.labels = labels
         self.tokenizer = tokenizer
@@ -262,3 +302,69 @@ class TensorDimensionHelperAddedDataset(Dataset):
 
     def __len__(self):
         return len(self.labels)
+
+
+class Trainer:
+    def __init__(self):
+        from utils.misc import CudaOperators
+        self.training_params_dir = CudaOperators.load_env_params()['target_training_params_dir']
+
+    def run_auto_train(self):
+        """ Returns: None """
+        scheduler = HuggingFaceModelTrainingScheduler()
+        params = self._get_auto_train_params()
+        for param in params:
+            scheduler(param=param)
+
+    def _get_auto_train_params(self):
+        """
+        Returns:
+            a list of dict where each dict has the key of str and the value of an int or a str or a list
+        """
+        from utils.data_loader import JSONLoader
+        param_dir = self.training_params_dir
+        param_options = JSONLoader(dir_=param_dir)()
+        param_option_list = self._get_param_option_list_from_param_options(
+            param_options=param_options
+        )
+        param_option_list = [self._clean_up_param_options(x) for x in param_option_list]
+        return param_option_list
+
+    @staticmethod
+    def _get_param_option_list_from_param_options(param_options):
+        """
+        Args:
+            param_options: a dict that has a key of str and the value of the list
+        """
+        from itertools import product
+        key_list, list_of_val_list = [], []
+        for key_, val_list in param_options.items():
+            key_list.append(key_)
+            list_of_val_list.append(val_list)
+        param_list_to_return = []
+        all_possible_params_accumulated = list(product(*list_of_val_list))
+        for list_of_possible_params in all_possible_params_accumulated:
+            assert len(key_list) == len(list_of_possible_params)
+            new_param = dict()
+            for idx, param_value in enumerate(list_of_possible_params):
+                new_param[key_list[idx]] = param_value
+            param_list_to_return.append(new_param)
+        return param_list_to_return
+
+    @staticmethod
+    def _clean_up_param_options(param_option):
+        """
+        Args:
+            param_option: a dict where the key is str and the value is an int or a str or a list
+
+        Returns:
+            a dict where the key is str and the value is an int or a str or a list
+        """
+        param_option["per_device_train_batch_size"] = param_option["per_device_batch_size"]
+        param_option["per_device_eval_batch_size"] = param_option["per_device_batch_size"]
+        del param_option["per_device_batch_size"]
+        return param_option
+
+
+if __name__ == "__main__":
+    Trainer().run_auto_train()
