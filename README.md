@@ -4,15 +4,16 @@
 If there is any issue (any issue at all),
 
 please contact `Wonsuk Yang (LawTalk & KAIST)`
+> ws.yang@lawcompany.co.kr (primary)
+
 > derrick0511@kaist.ac.kr (primary)
 
-> emmanuel20232035@gmail.com (primary)
+> emmanuel20232035@gmail.com
 
 > wy17892022@gmail.com 
 
 > derrick0511@nlp.kaist.ac.kr
 
-> ws.yang@lawcompany.co.kr
 
 I was very cautious about the Code Licence.
 Yet, I am rather certain that there must be a mistake. 
