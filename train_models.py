@@ -4,7 +4,7 @@ from utils.base_handler import HuggingFaceHelper
 
 
 class HuggingFaceModelTrainingScheduler(HuggingFaceHelper):
-    def __init__(self, gpu_id=0):
+    def __init__(self, gpu_id):
         """
         Args:
             gpu_id: an int
@@ -306,11 +306,13 @@ class TensorDimensionHelperAddedDataset(Dataset):
 class Trainer:
     def __init__(self):
         from utils.misc import CudaOperators
-        self.training_params_dir = CudaOperators.load_env_params()['target_training_params_dir']
+        env_params = CudaOperators.load_env_params()
+        self.gpu_to_use = env_params['gpu_id_to_use']
+        self.training_params_dir = env_params['target_training_params_dir']
 
     def run_auto_train(self):
         """ Returns: None """
-        scheduler = HuggingFaceModelTrainingScheduler()
+        scheduler = HuggingFaceModelTrainingScheduler(gpu_id=self.gpu_to_use)
         params = self._get_auto_train_params()
         for param in params:
             scheduler(param=param)

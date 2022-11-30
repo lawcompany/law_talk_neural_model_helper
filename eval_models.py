@@ -114,7 +114,7 @@ class HuggingFaceModelEvaluationSummarizer(HuggingFaceHelper):
 
 
 class HuggingFaceModelEvaluationScheduler(HuggingFaceHelper):
-    def __init__(self, gpu_id=0):
+    def __init__(self, gpu_id):
         """
         Args:
             gpu_id: an int
@@ -330,7 +330,7 @@ class Evaluator:
 
     def _run_auto_eval(self, check_point_dir_list, gpu_id=0):
         """ Returns: an int """
-        scheduler = HuggingFaceModelEvaluationScheduler()
+        scheduler = HuggingFaceModelEvaluationScheduler(gpu_id=self.gpu_to_use)
         print(f"[SCHEDULING] evaluation process at GPU_{gpu_id}"
               f"\n\t\t where `using_small_sample_for_eval` is {self.whether_to_use_small_samples_for_eval}"
               f"\n\t\t and `ignore_cache` is {self.ignore_cache}")

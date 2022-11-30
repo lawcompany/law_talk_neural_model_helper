@@ -1,5 +1,5 @@
 {
-  "gpu_id_to_use": 1,
+  "gpu_id_to_use": 0,
   "dataset_name": "lawcompany/KLAID",
   "task_name": "ljp",
   "ignore_cache_for_eval": true,
