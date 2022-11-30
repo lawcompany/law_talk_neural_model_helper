@@ -9,6 +9,7 @@ class HumanInteractionHelper:
         from utils.data_loader import JSONLoader
         hf_path = Directories.HuggingFacePath()
         if use_inputs_from_given_file:
+            print(f"[Loading User Inputs] from file {hf_path.human_inputs_file_dir}")
             user_inputs = JSONLoader(dir_=hf_path.human_inputs_file_dir)()
             user_inputs = [x['input'] for x in user_inputs if 'input' in x]
         else:
@@ -66,7 +67,6 @@ class Interactor:
         env_params = CudaOperators.load_env_params()
         self.gpu_id_to_use = env_params["gpu_id_to_use"]
         self.use_inputs_from_given_file = env_params["use_file_input_for_human_interaction"]
-        breakpoint()
 
     def interact_with_user(self):
         model_check_point_dir = self._get_best_model_if_there_is_any_and_get_random_model_else()

@@ -121,7 +121,7 @@ class HuggingFaceModelEvaluationScheduler(HuggingFaceHelper):
         """
         super().__init__(gpu_id=gpu_id)
         from train_models import HuggingFaceModelTrainingScheduler
-        self.training_scheduler = HuggingFaceModelTrainingScheduler()
+        self.training_scheduler = HuggingFaceModelTrainingScheduler(gpu_id=gpu_id)
 
     def __call__(self, target_check_point_dir_list, use_small_sample, ignore_cache):
         """
@@ -310,7 +310,6 @@ class Evaluator:
         self.whether_to_use_small_samples_for_eval = env_params["use_small_sample_for_eval"]
         self.ignore_cache = env_params["ignore_cache_for_eval"]
         self.gpu_to_use = env_params["gpu_id_to_use"]
-        breakpoint()
 
     def run_auto_eval(self):
         self._run_auto_eval_in_single_process()
