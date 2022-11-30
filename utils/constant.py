@@ -18,10 +18,10 @@ class Directories:
 
     class HuggingFacePath:
         def __init__(self):
-            huggingface_root = Directories.RESULTS_DIR
-            self.train_model_dir_root = f"{huggingface_root}/models"
-            self.eval_model_dir_root = f"{huggingface_root}/models"
-            self.log_dir_root = f"{huggingface_root}/logs"
+            self.huggingface_root = Directories.RESULTS_DIR
+            self.train_model_dir_root = f"{self.huggingface_root}/models"
+            self.eval_model_dir_root = f"{self.huggingface_root}/models"
+            self.log_dir_root = f"{self.huggingface_root}/logs"
             self.human_inputs_file_dir = "./inputs_for_human_interaction_simulation.json"
             self.evaluation_summary_file_header = "evaluation_summary"
             self.explicitly_given_test_data = "./dataset_for_sanity_check.json"

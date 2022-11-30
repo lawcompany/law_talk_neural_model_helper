@@ -22,14 +22,31 @@ Therefore, if there is any concern or an issue,
 please do not hesitate to contact.
 
 ## Quick Start
+### Prerequisites
+You should install PyTorch before the Quick Setup.
+Please visit `https://pytorch.org/get-started/locally/` for the right version of PyTorch that suits your CUDA.
 
+You may check whether it was successfully installed by checking the following commands.
+if it returns `True` then you are good to go.
+
+```python
+from torch.cuda import is_available
+print(is_available())
+```
+
+### Quick Setup
 ```bash
 $ cd ~/Downloads
 $ git clone https://github.com/lawcompany/lawtalk_neural_model_helper.git
 $ cd law_talk_neural_model_helper
 $ pip install -r requirements.txt
-$ python eval_models.py 
 ```
+
+### Quick Training
+```bash
+$ python train_models.py 
+```
+
 The command above should train the models according to the `parameters/model_parameters.json`, then save models at `results` dir.
 
 If any error bothers you, please contact me (please refer to the email addresses above). I tried to cover all possible exceptions, but if it bothered you, my bad ;) sorry about that.

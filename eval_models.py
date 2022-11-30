@@ -1,7 +1,7 @@
-from utils.hugging_face_base_handler import HuggingFaceBaseHandler
+from utils.base_handler import HuggingFaceHelper
 
 
-class HuggingFaceModelEvaluationSummarizer(HuggingFaceBaseHandler):
+class HuggingFaceModelEvaluationSummarizer(HuggingFaceHelper):
     def __init__(self):
         super().__init__()
 
@@ -113,7 +113,7 @@ class HuggingFaceModelEvaluationSummarizer(HuggingFaceBaseHandler):
         return to_return
 
 
-class HuggingFaceModelEvaluationScheduler(HuggingFaceBaseHandler):
+class HuggingFaceModelEvaluationScheduler(HuggingFaceHelper):
     def __init__(self, gpu_id=0):
         """
         Args:
@@ -305,9 +305,12 @@ class HuggingFaceModelEvaluationScheduler(HuggingFaceBaseHandler):
 
 class Evaluator:
     def __init__(self):
-        self.whether_to_use_small_samples_for_eval = True
-        self.ignore_cache = True
-        self.gpu_to_use = 1
+        from utils.misc import CudaOperators
+        env_params = CudaOperators.load_env_params()
+        self.whether_to_use_small_samples_for_eval = env_params["use_small_sample_for_eval"]
+        self.ignore_cache = env_params["ignore_cache_for_eval"]
+        self.gpu_to_use = env_params["gpu_id_to_use"]
+        breakpoint()
 
     def run_auto_eval(self):
         self._run_auto_eval_in_single_process()

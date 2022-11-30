@@ -1,9 +1,9 @@
 from torch.utils.data import Dataset
 from torch import tensor
-from utils.hugging_face_base_handler import HuggingFaceBaseHandler
+from utils.base_handler import HuggingFaceHelper
 
 
-class HuggingFaceModelTrainingScheduler(HuggingFaceBaseHandler):
+class HuggingFaceModelTrainingScheduler(HuggingFaceHelper):
     def __init__(self, gpu_id=0):
         """
         Args:
@@ -60,7 +60,6 @@ class HuggingFaceModelTrainingScheduler(HuggingFaceBaseHandler):
         from utils.data_loader import JSONLoader
         from utils.constant import Directories
         id2label = JSONLoader(dir_=Directories.LAW_SERVICE_MAPPING_DIR)()
-        id2label = id2label['id2label']
         return id2label
 
     def get_customized_metric(self, pred):
