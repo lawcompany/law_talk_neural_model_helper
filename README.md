@@ -62,7 +62,7 @@ The summary file contains the evaluation results of the models, where the best m
 ```bash
 $ python user_interaction.py
 ```
-It will show a prompt in which you can type a text. The text will be given to the best model then the model will produce an output
+It will show a prompt in which you can type a text. The text will be given to the best model then the model will produce an output.
 
 ## Parameter Settings
 You can adjust the parameters in `hugging_face_train_params.json` for more various parameters to try with.
