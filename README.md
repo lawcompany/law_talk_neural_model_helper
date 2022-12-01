@@ -181,7 +181,9 @@ The file has the format as follows.
     "whether_only_small_samples_are_used_for_eval": true
   },
   
-  ...
+  
+  {"and so on": "..."}
+  
   
 ]
 ```
