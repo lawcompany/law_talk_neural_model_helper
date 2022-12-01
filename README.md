@@ -27,7 +27,7 @@ You should install PyTorch before the Quick Setup.
 Please visit `https://pytorch.org/get-started/locally/` for the right version of PyTorch that suits your CUDA.
 
 You may check whether it was successfully installed by checking the following commands.
-if it returns `True` then you are good to go.
+If it returns `True` then you are good to go.
 
 ```python
 from torch.cuda import is_available
@@ -37,7 +37,7 @@ print(is_available())
 ### Quick Setup
 ```bash
 $ cd ~/Downloads
-$ git clone https://github.com/lawcompany/lawtalk_neural_model_helper.git
+$ git clone https://github.com/lawcompany/law_talk_neural_model_helper.git
 $ cd law_talk_neural_model_helper
 $ pip install -r requirements.txt
 ```
@@ -49,7 +49,7 @@ $ python train_models.py
 
 The command above should train the models according to the `parameters/model_parameters.json`, then save models at `results` dir.
 
-If any error bothers you, please contact me (please refer to the email addresses above). I tried to cover all possible exceptions, but if it bothered you, my bad ;) sorry about that.
+If any error bothers you, please contact me (please refer to the email addresses above). I tried to cover all possible exceptions, but if it bothered you, my bad; terribly sorry about that.
 
 ### Evaluation (After the Training is Done)
 ```bash
@@ -62,10 +62,10 @@ The summary file contains the evaluation results of the models, where the best m
 ```bash
 $ python user_interaction.py
 ```
-it will show a prompt in which you can type a text. The text will be given to the best model then the model will produce an output
+It will show a prompt in which you can type a text. The text will be given to the best model then the model will produce an output.
 
 ## Parameter Settings
-you can adjust the parameters in `hugging_face_train_params.json` for more various parameters to try with.
+You can adjust the parameters in `hugging_face_train_params.json` for more various parameters to try with.
 The `train_models.py` try to train with all permutations of the options, and if OOM error occurs, it logs the error then proceeds.
 The parameter file contains options as follows: 
 
