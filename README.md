@@ -37,7 +37,7 @@ print(is_available())
 ### Quick Setup
 ```bash
 $ cd ~/Downloads
-$ git clone https://github.com/lawcompany/lawtalk_neural_model_helper.git
+$ git clone https://github.com/lawcompany/law_talk_neural_model_helper.git
 $ cd law_talk_neural_model_helper
 $ pip install -r requirements.txt
 ```
