@@ -90,6 +90,102 @@ The parameter file contains options as follows:
 }
 ```
 
+## Evaluation Summary (Auto-Generated)
+
+After the execution of the `eval_models.py`,
+
+a file `evaluation_summary~.json` will be saved at
+`results/logs`.
+
+The file contains the model performance summaries where the best model is at the top.
+
+Please note that the `test` is now conducted casually on the Dev. dataset :) Those are not for the actual `test` dataset for the competition. The logged `performance` is for the Dev. dataset, which would suffice for Dev. process.
+
+The file has the format as follows.
+```json
+[
+  {
+    "parameters": {
+      "num_train_epochs": 3,
+      "save_steps": 50,
+      "seed": 4242,
+      "evaluation_strategy": "steps",
+      "gradient_accumulation_steps": 16,
+      "eval_accumulation_steps": 32,
+      "eval_steps": 50,
+      "logging_steps": 25,
+      "learning_rate": 0.0001,
+      "weight_decay": 0.5,
+      "save_total_limit": 3,
+      "load_best_model_at_end": "True",
+      "metric_for_best_model": "f1",
+      "label_names": [
+        "labels"
+      ],
+      "per_device_train_batch_size": 8,
+      "per_device_eval_batch_size": 8,
+      "fp16": true,
+      "no_cuda": false,
+      "output_dir": "results/models/model_2022-11-28_20:39:16.108682",
+      "hugging_face_model_name": "klue/roberta-base",
+      "whether_OOM_happened": false
+    },
+    "performance": {
+      "accuracy": 0.96,
+      "f1": 0.9292929292929293,
+      "model_path": "results/models/model_2022-11-28_20:39:16.108682/checkpoint-750",
+      "test_results_on_explicitly_given_dataset": {
+        "accuracy": 1.0,
+        "f1": 1.0
+      }
+    },
+    "checkpoint": "750",
+    "whether_only_small_samples_are_used_for_eval": true
+  },
+  {
+    "parameters": {
+      "num_train_epochs": 3,
+      "save_steps": 50,
+      "seed": 42,
+      "evaluation_strategy": "steps",
+      "gradient_accumulation_steps": 16,
+      "eval_accumulation_steps": 32,
+      "eval_steps": 50,
+      "logging_steps": 25,
+      "learning_rate": 0.0001,
+      "weight_decay": 0.05,
+      "save_total_limit": 3,
+      "load_best_model_at_end": "True",
+      "metric_for_best_model": "f1",
+      "label_names": [
+        "labels"
+      ],
+      "per_device_train_batch_size": 32,
+      "per_device_eval_batch_size": 32,
+      "fp16": true,
+      "no_cuda": false,
+      "output_dir": "results/models/model_2022-11-29_01:12:43.918213",
+      "hugging_face_model_name": "klue/roberta-base",
+      "whether_OOM_happened": false
+    },
+    "performance": {
+      "accuracy": 0.96,
+      "f1": 0.9350762527233115,
+      "model_path": "results/models/model_2022-11-29_01:12:43.918213/checkpoint-600",
+      "test_results_on_explicitly_given_dataset": {
+        "accuracy": 1.0,
+        "f1": 1.0
+      }
+    },
+    "checkpoint": "600",
+    "whether_only_small_samples_are_used_for_eval": true
+  },
+  
+  ...
+  
+]
+```
+
 
 ## Copyright
 All rights reserved, LawTalk (Law&Company)
