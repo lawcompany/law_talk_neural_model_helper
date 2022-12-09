@@ -34,7 +34,7 @@ from torch.cuda import is_available
 print(is_available())
 ```
 
-(Note) Currently fixing (2022 Dec 09) the very uncanny CUDA error that is shown in tensor-flow-base docker image, CUDA kernel image not available
+> Note) Currently fixing (2022 Dec 09) the very uncanny CUDA error that is shown in tensor-flow-base docker image, CUDA kernel image not available
 
 ### Quick Setup
 ```bash
