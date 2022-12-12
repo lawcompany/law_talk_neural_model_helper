@@ -34,7 +34,7 @@ from torch.cuda import is_available
 print(is_available())
 ```
 
-> Note) Currently fixing (2022 Dec 09) the very uncanny CUDA error that is shown in tensor-flow-base docker image, CUDA kernel image not available
+> Note) If you get an error (or a user warning) about `CUDA capabilities sm_37 sm_50 sm_60 sm_70`, it is saying that the pytorch is aware of the existence of the CUDA (thus, it may say that `is_available=True`) yet it may not be able to conduct some matrix-related operations using the seen CUDA. Therefore, if you see the error (or warning), please follow `https://pytorch.org/get-started/previous-versions/` to install the right version of pytorch that is suitable for your CUDA driver. If you need any help to do that, please contact Wonsuk Yang.
 
 ### Quick Setup
 ```bash
