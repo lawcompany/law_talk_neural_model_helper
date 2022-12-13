@@ -255,7 +255,7 @@ class HuggingFaceModelEvaluationScheduler(HuggingFaceHelper):
         """
         from transformers import AutoModelForSequenceClassification, TextClassificationPipeline
         model = AutoModelForSequenceClassification.from_pretrained(model_dir)
-        pipe = TextClassificationPipeline(model=model, tokenizer=tokenizer, device=self.gpu_id)
+        pipe = TextClassificationPipeline(model=model, tokenizer=tokenizer, device=0)
         formatted_facts, formatted_labels = self.get_formatted_facts_and_labels_from_test_data(
             test_data=test_data, tokenizer=tokenizer, use_small_sample=use_small_sample
         )
