@@ -1,26 +1,5 @@
 # HuggingFace Model Training Helper by LawTalk
 
-## Contact
-If there is any issue (any issue at all),
-
-please contact `Wonsuk Yang (LawTalk & KAIST)`
-> ws.yang@lawcompany.co.kr (primary)
-
-> derrick0511@kaist.ac.kr (primary)
-
-> emmanuel20232035@gmail.com
-
-> wy17892022@gmail.com 
-
-> derrick0511@nlp.kaist.ac.kr
-
-
-I was very cautious about the Code Licence.
-Yet, I am rather certain that there must be a mistake. 
-
-Therefore, if there is any concern or an issue,
-please do not hesitate to contact.
-
 ## Quick Start
 ### Prerequisites
 You should install PyTorch before the Quick Setup.
@@ -33,8 +12,6 @@ If it returns `True` then you are good to go.
 from torch.cuda import is_available
 print(is_available())
 ```
-
-> Note) If you get an error (or a user warning) about `CUDA capabilities sm_37 sm_50 sm_60 sm_70`, it is saying that the pytorch is aware of the existence of the CUDA (thus, it may say that `is_available=True`) yet it may not be able to conduct some matrix-related operations using the seen CUDA. Therefore, if you see the error (or warning), please follow `https://pytorch.org/get-started/previous-versions/` to install the right version of pytorch that is suitable for your CUDA driver. If you need any help to do that, please contact Wonsuk Yang.
 
 ### Quick Setup
 ```bash
@@ -50,8 +27,6 @@ $ python train_models.py
 ```
 
 The command above should train the models according to the `parameters/model_parameters.json`, then save models at `results` dir.
-
-If any error bothers you, please contact me (please refer to the email addresses above). I tried to cover all possible exceptions, but if it bothered you, my bad; terribly sorry about that.
 
 ### Evaluation (After the Training is Done)
 ```bash
@@ -187,7 +162,17 @@ The file has the format as follows.
   {"and so on": "..."}
   
   
-]
+## Contact
+
+> ws.yang@lawcompany.co.kr
+
+> derrick0511@kaist.ac.kr
+
+> emmanuel20232035@gmail.com
+
+> wy17892022@gmail.com 
+
+> derrick0511@nlp.kaist.ac.kr
 ```
 
 
