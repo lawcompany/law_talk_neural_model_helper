@@ -160,20 +160,13 @@ The file has the format as follows.
   
   
   {"and so on": "..."}
-  
-  
+```
+
 ## Contact
 
 > ws.yang@lawcompany.co.kr
 
 > derrick0511@kaist.ac.kr
-
-> emmanuel20232035@gmail.com
-
-> wy17892022@gmail.com 
-
-> derrick0511@nlp.kaist.ac.kr
-```
 
 
 ## Copyright
